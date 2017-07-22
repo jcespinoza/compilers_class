@@ -1,0 +1,13 @@
+expr ->   term ((+|-) term)*
+          term
+
+term ->   factor ((*|/) term)*
+
+factor -> (E) | [0-9]+
+
+
+E  -> T E'
+E' -> + T E' | -TE' |epsilon
+T  -> F T'
+T' -> * F T' | /FT' |epsilon
+F  -> (E) |
