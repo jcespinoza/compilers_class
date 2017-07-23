@@ -1,2 +1,5 @@
 # object compiled c files
 *.o
+
+# executable
+sample1
