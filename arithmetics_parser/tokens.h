@@ -7,6 +7,6 @@
 #define RIGHT_PAR 105
 
 #define NUMBER 106
-#define EOL 107
+#define TK_EOL 107
 #define TK_EOF 108
 #define TK_ERROR 999

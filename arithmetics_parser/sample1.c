@@ -782,7 +782,7 @@ case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
 #line 18 "sample1.l"
-{ return EOL; }
+{ return TK_EOL; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 19 "sample1.l"
@@ -1801,12 +1801,12 @@ void yyfree (void * ptr )
 
 
 
-int main()
+/*int main()
 {
   int token;
 
   while ( (token = yylex()) != TK_EOF) {
     printf("%d: %s\n",token,yytext);
   }
-}
+}*/
 

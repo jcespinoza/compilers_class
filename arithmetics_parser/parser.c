@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include "tokens.h" //comment out once makefile is fixed
+#include "tokens.h" //comment out once makefile is fixed
 int token;
 
 int expr();
@@ -27,6 +27,10 @@ int expr() {
 		default:
 			break;
 	}
+  if(token != TK_EOL && token != TK_EOF){
+    printf("Error: expected end of line or end of file. Got '%s'\n", yytext);
+    return -1;
+  }
 	return result;
 }
 
@@ -65,12 +69,12 @@ int factor() {
 			if(token == RIGHT_PAR) {
 				token = yylex();
 			} else {
-				printf("Error: expected ')'\n");
+				printf("Error: expected ')' but got '%s'\n", yytext);
 			}
 			return result;
 		}
 		default:
-			printf("Error: expected number or '('\n");
+			printf("Error: expected number or '(' but got '%s'\n", yytext);
 			return 0;
 	}
 }
