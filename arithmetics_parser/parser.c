@@ -27,7 +27,7 @@ int expr() {
 		default:
 			break;
 	}
-  if(token != TK_EOL && token != TK_EOF){
+  if(token != TK_EOL && token != TK_EOF && token != RIGHT_PAR){
     printf("Error: expected end of line or end of file. Got '%s'\n", yytext);
     return -1;
   }
