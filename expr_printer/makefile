@@ -1,4 +1,4 @@
-TARGET=sample2
+TARGET=sample3
 C_SRCFILES=main.c expr_parser.c expr_lexer.c
 OBJ_FILES=${C_SRCFILES:.c=.o}
 .PHONY : clean
