@@ -2,6 +2,6 @@
 *.o
 
 # executable
-sample2
+sample3
 tokens.h
 expr_*.*
