@@ -2,18 +2,14 @@
 #include <stdio.h>
 
 int yylex();
-void yyerror(const char* msg){
-  printf("%s\n", msg);
+extern int yylineno;
+void yyerror(const char *msg){
+  printf("Line %d : %s \n",yylineno,msg);
 }
 
-#define YYERROR_VERBOSE
+#define YYERROR_VERBOSE 1
 
 int variables[10];
-
-int counter = 0;
-for(counter = 0; counter < 10; counter++){
-  variables[counter] = 0;
-}
 
 %}
 
@@ -28,15 +24,26 @@ for(counter = 0; counter < 10; counter++){
 
 %%
 
-input:  input input_line
+start: opt_eols statements opt_eols
+    ;
+
+statements: statements eols statement
+    | statement
+    ;
+
+eols: eols TK_EOL
+    | TK_EOL
+    ;
+
+opt_eols: eols
     |
     ;
 
-input_line:  var_assignment TK_EOL { $$ = $1; }
-    |   print TK_EOL { $$ = $1; }
+statement: var_assignment
+    | print
     ;
 
-var_assignment: TK_VAR_SIGN TK_NUMBER OP_ASSIGN expr { variables[$2] = $3; }
+var_assignment: TK_VAR_SIGN OP_ASSIGN expr { variables[$1] = $3; }
     ;
 
 print: KW_PRINT expr { printf("%d\n", $2); }
@@ -53,7 +60,6 @@ term : term OP_MUL factor { $$ = $1 * $3; }
     ;
 
 factor: TK_NUMBER { $$ = $1; }
+    | TK_VAR_SIGN {$$ = variables[$1]; }
     | TK_LEFT_PAR expr TK_RIGHT_PAR { $$ = $2; }
     ;
-
-var_name: TK_VAR_SIGN TK_NUMBER {  }

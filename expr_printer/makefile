@@ -4,9 +4,9 @@ OBJ_FILES=${C_SRCFILES:.c=.o}
 .PHONY : clean
 
 $(TARGET): $(OBJ_FILES)
-	gcc -o $@ $^
+	gcc -o $@ $(OBJ_FILES)
 
-%.o: %.c
+%.o: %.c tokens.h
 	gcc -c -o $@ $<
 
 expr_lexer.c: expr.l
@@ -16,7 +16,7 @@ expr_parser.c: expr.y
 	bison --defines=tokens.h -o $@ $<
 
 run: $(TARGET)
-	./$(TARGET) < input.txt
+	./$(TARGET) input.txt
 
 clean:
 	rm -f expr_lexer.c expr_parser.c
