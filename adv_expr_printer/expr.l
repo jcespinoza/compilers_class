@@ -3,6 +3,7 @@
 %x comment
 %x include
 %{
+  
 #include "lexer_code.c"
 
 %}

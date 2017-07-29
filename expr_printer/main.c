@@ -6,7 +6,7 @@ void yyparse();
 extern FILE* yyin;
 
 int main(int argc, char* argv[]) {
-  if(argc <= 2){
+  if(argc < 2){
     fprintf(stderr, "Usage: %s <input file 1> <input file 2>...\n", argv[0]);
     return 1;
   }

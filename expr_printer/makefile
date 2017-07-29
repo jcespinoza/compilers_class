@@ -22,3 +22,4 @@ clean:
 	rm -f expr_lexer.c expr_parser.c
 	rm -f *.o
 	rm -f ./$(TARGET)
+	rm -f tokens.h
