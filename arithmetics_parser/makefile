@@ -17,3 +17,4 @@ run: $(TARGET)
 clean:
 	rm -f sample1.c
 	rm -f sample1
+	rm -f *.o
