@@ -21,7 +21,7 @@ int push_file(char* filename){
   FILE* file = fopen(filename, "r");
 
   if(file == NULL){
-    fprintf(stderr, "File %s not found", filename);
+    fprintf(stderr, "File %s not found\n", filename);
     return 1;
   }
 
