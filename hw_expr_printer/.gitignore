@@ -1,0 +1,7 @@
+# object compiled c files
+*.o
+
+# executable
+expr_printer
+tokens.h
+expr_*.*

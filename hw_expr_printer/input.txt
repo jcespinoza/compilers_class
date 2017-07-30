@@ -1,0 +1,15 @@
+$0 = 10
+$7 = 20
+
+$1 = ($0 + $7) * 5
+
+print $0
+print $7
+print $1
+print ($1 + 10)
+
+$0 = 0
+$1 = 0
+$7 = 0
+
+#include "input2.txt"
