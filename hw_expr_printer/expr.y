@@ -1,5 +1,8 @@
 %{
 #include <stdio.h>
+#ifndef DEC_FORMAT
+  #include "defs.h"
+#endif
 
 int yylex();
 extern int yylineno;
@@ -11,6 +14,20 @@ void yyerror(const char *msg){
 
 int variables[10];
 
+void printBits(void const* const pointer ){
+  unsigned char *bits = (unsigned char*)pointer;
+  unsigned char oneByte;
+  int index, jindex;
+
+  printf("0b");
+  for(index = sizeof(int) - 1; index >= 0; index--){
+    for(jindex = 7; jindex >= 0; jindex--){
+      oneByte = (bits[index] >> jindex) & 1;
+      printf("%u", oneByte);
+    }
+  }
+  printf("\n");
+}
 %}
 
 %token OP_ASSIGN
@@ -21,6 +38,7 @@ int variables[10];
 %token TK_RIGHT_PAR
 %token TK_NUMBER TK_VAR_SIGN
 %token TK_EOL TK_EOF TK_ERROR
+%token TK_FORMAT
 
 %%
 
@@ -46,7 +64,19 @@ statement: var_assignment
 var_assignment: TK_VAR_SIGN OP_ASSIGN expr { variables[$1] = $3; }
     ;
 
-print: KW_PRINT expr { printf("%d\n", $2); }
+print: KW_PRINT expr pr_format {
+      if($3 == HEX_FORMAT){
+        printf("0x%032X\n", $2);
+      }else if($3 == BIN_FORMAT){
+        printBits( (void const* const)(&$2) );
+      }else{
+        printf("%d\n", $2);
+      }
+    }
+    ;
+
+pr_format:  TK_FORMAT { $$ = $1; }
+    |  { $$ = DEC_FORMAT; }
     ;
 
 expr : expr OP_ADD term { $$ = $1 + $3; }

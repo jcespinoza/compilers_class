@@ -1,6 +1,6 @@
 print 314159
 
-#include "input3.txt"
+#include <input3.txt>
 
 $5 = 5
 
