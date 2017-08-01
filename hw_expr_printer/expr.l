@@ -43,10 +43,10 @@ int process_include(char end_symbol);
 .            { return TK_ERROR; }
 
 <include>[^\"\n]+ {
-                    process_include('"');
+                    return process_include('"');
                   }
 <includeDiamond>[^>\n]+ {
-                    process_include('>');
+                    return process_include('>');
                   }
 <comment>"*/" { BEGIN(INITIAL); }
 <comment>.|\n { /* NADA */ }
@@ -54,8 +54,10 @@ int process_include(char end_symbol);
 %%
 
 int process_include(char end_symbol){
-  int c;
-  while((c = input()) && c != '\n');
+  int cInput;
+  char cBlank = ' ';
+  //byte foundEnd = 0;
+  while((cInput = input()) && cInput != '\n');
 
   yylineno++;
 

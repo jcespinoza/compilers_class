@@ -16,5 +16,22 @@ Exercise files for the Compilers II class CCC502, 2017 Quarter 3
 - Support format for expression printing: decimal, hexadecimal or binary:
 
 ```
-Usage: print <expr> [dec | hex | bin] 32 bit integers;
+Usage: print <expr> [dec | hex | bin] 32 bit integers
+```
+
+```c
+{
+  if(cInput == end_symbol){
+    foundEnd = 1;
+  }
+  if(foundEnd && cInput != cBlank){
+    fprintf(stderr, "Line %d: Invalid characters after filename\n", yylineno);
+    return 0;
+  }
+  if(cInput != cBlank && cInput != end_symbol){
+    foundEnd = 1;
+  }else if(cInput == cBlank){
+
+  }
+}
 ```
