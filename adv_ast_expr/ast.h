@@ -158,4 +158,20 @@ public:
 private:
   void printBits(void const* const pointer );
 };
+
+class IfStatement: public Statement{
+public:
+  IfStatement(Expr* condition, Statement* truePart, Statement* falsePart){
+    this->condition = condition;
+    this->truePart = truePart;
+    this->falsePart = falsePart;
+  }
+
+  void exec();
+
+  Expr* condition;
+  Statement* truePart;
+  Statement* falsePart;
+};
+
 #endif
