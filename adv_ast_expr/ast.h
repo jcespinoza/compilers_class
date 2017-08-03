@@ -71,6 +71,48 @@ public:
   int index;
 };
 
+class EqualsOp : public BinaryExpr{
+public:
+  EqualsOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
+class NotEqualsOp : public BinaryExpr{
+public:
+  NotEqualsOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
+class LeqThanOp : public BinaryExpr{
+public:
+  LeqThanOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
+class GreqThanOp : public BinaryExpr{
+public:
+  GreqThanOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
+class LessThanOp : public BinaryExpr{
+public:
+  LessThanOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
+class GreaterThanOp : public BinaryExpr{
+public:
+  GreaterThanOp(Expr* LeftSide, Expr *RightSide): BinaryExpr(LeftSide, RightSide){}
+
+  int eval();
+};
+
 class Statement{
 public:
   virtual void exec() = 0;

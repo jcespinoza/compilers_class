@@ -59,7 +59,7 @@ opt_eols: eols
 
 statement: var_assignment { $$ = $1; }
     | print { $$ = $1; }
-    | if_statement
+    | if_statement { $$ = $1; }
     ;
 
 var_assignment: TK_VAR_SIGN OP_ASSIGN expr { $$ = new AssignmentStatement($1, $3); }
@@ -72,10 +72,27 @@ pr_format:  TK_FORMAT { $$ = $1; }
     |  { $$ = DEC_FORMAT; }
     ;
 
-if_statement: KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR block_or_statement
+if_statement: KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR block_or_statement optional_else { $$ = new IfStatement($3, $5, $6); }
+    ;
 
-expr : expr OP_ADD term { $$ = new AddExpr($1, $3); }
-    | expr OP_SUB term { $$ = new SubExpr($1, $3); }
+block_or_statement: TK_LEFT_BRACE statements TK_RIGHT_BRACE { $$ = S2;}
+    | statement { $$ = $1; }
+    ;
+
+optional_else: KW_ELSE block_or_statement { $$ = $2; }
+    | { $$ = NULL; }
+    ;
+
+expr: expr OP_EQUALS add_expr { $$ = new EqualsOp($1, $3); }
+    | expr OP_NEQ add_expr { $$ = new NotEqualsOp($1, $3); }
+    | expr OP_LEQ_THAN add_expr { $$ = new LeqThanOp($1, $3); }
+    | expr OP_GREQ_THAN add_expr { $$ = new GreqThanOp($1, $3); }
+    | expr OP_LESS_THAN add_expr { $$ = new LessThanOp($1, $3); }
+    | expr OP_GREATER_THAN add_expr { $$ = new GreaterThanOp($1, $3); }
+    ;
+
+add_expr: add_expr OP_ADD term { $$ = new AddExpr($1, $3); }
+    | add_expr OP_SUB term { $$ = new SubExpr($1, $3); }
     | term { $$ = $1; }
     ;
 

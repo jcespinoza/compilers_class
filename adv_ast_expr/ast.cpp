@@ -30,6 +30,48 @@ int DivExpr::eval(){
   return leftValue / rightValue;
 }
 
+int EqualsOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue == rightValue;
+}
+
+int NotEqualsOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue != rightValue;
+}
+
+int LeqThanOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue <= rightValue;
+}
+
+int GreqThanOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue >= rightValue;
+}
+
+int LessThanOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue < rightValue;
+}
+
+int GreaterThanOp::eval(){
+  int leftValue = LeftSide->eval();
+  int rightValue = RightSide->eval();
+
+  return leftValue > rightValue;
+}
+
 int VarExpr::eval(){
   return variables[index];
 }
