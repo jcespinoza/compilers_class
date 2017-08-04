@@ -40,6 +40,7 @@ int process_include(char end_symbol);
 
               return TK_FORMAT;
              }
+[_a-zA-Z][_a-zA-Z]* { yylval.charp_t = yytext; return TK_IDENTIFIER; }
 "+"          { return OP_ADD; }
 "-"          { return OP_SUB; }
 "*"          { return OP_MUL; }

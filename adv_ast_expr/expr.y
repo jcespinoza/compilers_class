@@ -24,6 +24,7 @@ void yyerror(const char *msg){
   Statement* statement_t;
   Expr* expr_t;
   int int_t;
+  char* charp_t;
 }
 
 %expect 1
@@ -32,6 +33,7 @@ void yyerror(const char *msg){
 %type <statement_t> if_statement optional_else block_or_statement
 %type <expr_t> expr term factor add_expr
 %type<int_t> pr_format
+%token<charp_t> TK_IDENTIFIER
 
 %token OP_ASSIGN OP_EQUALS OP_NEQ
 %token OP_ADD OP_SUB OP_GREATER_THAN OP_LESS_THAN
@@ -66,6 +68,7 @@ statement: var_assignment { $$ = $1; }
     ;
 
 var_assignment: TK_VAR_SIGN OP_ASSIGN expr { $$ = new AssignmentStatement($1, $3); }
+    /*| TK_IDENTIFIER OP_ASSIGN expr { $$ = new }*/
     ;
 
 print: KW_PRINT expr pr_format { $$ = new PrintStatement($2, $3); }
@@ -86,12 +89,12 @@ optional_else: KW_ELSE block_or_statement { $$ = $2; }
     | { $$ = NULL; }
     ;
 
-expr: expr OP_EQUALS add_expr { $$ = new EqualsOp($1, $3); }
-    | expr OP_NEQ add_expr { $$ = new NotEqualsOp($1, $3); }
-    | expr OP_LEQ_THAN add_expr { $$ = new LeqThanOp($1, $3); }
-    | expr OP_GREQ_THAN add_expr { $$ = new GreqThanOp($1, $3); }
-    | expr OP_LESS_THAN add_expr { $$ = new LessThanOp($1, $3); }
-    | expr OP_GREATER_THAN add_expr { $$ = new GreaterThanOp($1, $3); }
+expr: expr OP_EQUALS add_expr { $$ = new EqualsExpr($1, $3); }
+    | expr OP_NEQ add_expr { $$ = new NotEqualsExpr($1, $3); }
+    | expr OP_LEQ_THAN add_expr { $$ = new LeqThanExpr($1, $3); }
+    | expr OP_GREQ_THAN add_expr { $$ = new GreqThanExpr($1, $3); }
+    | expr OP_LESS_THAN add_expr { $$ = new LessThanExpr($1, $3); }
+    | expr OP_GREATER_THAN add_expr { $$ = new GreaterThanExpr($1, $3); }
     | add_expr { $$ = $1; }
     ;
 

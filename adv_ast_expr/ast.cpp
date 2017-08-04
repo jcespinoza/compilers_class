@@ -1,76 +1,33 @@
 #include "ast.h"
 
+#define IMPL_BIN_EXPR_EVAL(name, op)    \
+  int name##Expr::eval(){               \
+    int leftValue = LeftSide->eval();   \
+    int rightValue = RightSide->eval(); \
+    return leftValue op rightValue;     \
+  }
+
 int variables[10];
 
-int AddExpr::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
+IMPL_BIN_EXPR_EVAL(Add, +)
 
-  return leftValue + rightValue;
-}
+IMPL_BIN_EXPR_EVAL(Sub, -)
 
-int SubExpr::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
+IMPL_BIN_EXPR_EVAL(Mult, *)
 
-  return leftValue - rightValue;
-}
+IMPL_BIN_EXPR_EVAL(Div, /)
 
-int MultExpr::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
+IMPL_BIN_EXPR_EVAL(Equals, ==)
 
-  return leftValue * rightValue;
-}
+IMPL_BIN_EXPR_EVAL(NotEquals, !=)
 
-int DivExpr::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
+IMPL_BIN_EXPR_EVAL(LeqThan, <=)
 
-  return leftValue / rightValue;
-}
+IMPL_BIN_EXPR_EVAL(GreqThan, >=)
 
-int EqualsOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
+IMPL_BIN_EXPR_EVAL(LessThan, <)
 
-  return leftValue == rightValue;
-}
-
-int NotEqualsOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
-
-  return leftValue != rightValue;
-}
-
-int LeqThanOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
-
-  return leftValue <= rightValue;
-}
-
-int GreqThanOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
-
-  return leftValue >= rightValue;
-}
-
-int LessThanOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
-
-  return leftValue < rightValue;
-}
-
-int GreaterThanOp::eval(){
-  int leftValue = LeftSide->eval();
-  int rightValue = RightSide->eval();
-
-  return leftValue > rightValue;
-}
+IMPL_BIN_EXPR_EVAL(GreaterThan, >)
 
 int VarExpr::eval(){
   return variables[index];
