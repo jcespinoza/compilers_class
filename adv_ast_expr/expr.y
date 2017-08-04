@@ -1,4 +1,4 @@
-%code requires{
+%code requires {
   #include "ast.h"
 }
 
@@ -26,8 +26,9 @@ void yyerror(const char *msg){
   int int_t;
 }
 
-%type <statement_t> statement var_assignment print statements if_statement
-%type <expr_t> expr term factor
+%type <statement_t> statement var_assignment print statements
+%type <statement_t> if_statement optional_else block_or_statement
+%type <expr_t> expr term factor add_expr
 %type<int_t> pr_format
 
 %token OP_ASSIGN OP_EQUALS OP_NEQ
@@ -75,7 +76,7 @@ pr_format:  TK_FORMAT { $$ = $1; }
 if_statement: KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR block_or_statement optional_else { $$ = new IfStatement($3, $5, $6); }
     ;
 
-block_or_statement: TK_LEFT_BRACE statements TK_RIGHT_BRACE { $$ = S2;}
+block_or_statement: TK_LEFT_BRACE opt_eols statements opt_eols TK_RIGHT_BRACE { $$ = $3;}
     | statement { $$ = $1; }
     ;
 
@@ -89,6 +90,7 @@ expr: expr OP_EQUALS add_expr { $$ = new EqualsOp($1, $3); }
     | expr OP_GREQ_THAN add_expr { $$ = new GreqThanOp($1, $3); }
     | expr OP_LESS_THAN add_expr { $$ = new LessThanOp($1, $3); }
     | expr OP_GREATER_THAN add_expr { $$ = new GreaterThanOp($1, $3); }
+    | add_expr { $$ = $1; }
     ;
 
 add_expr: add_expr OP_ADD term { $$ = new AddExpr($1, $3); }

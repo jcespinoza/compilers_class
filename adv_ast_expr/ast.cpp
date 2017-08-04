@@ -118,5 +118,5 @@ void PrintStatement::printBits(void const* const pointer ){
 }
 
 void IfStatement::exec(){
-  printf("Executing if statement;\n")
+  printf("Executing if statement;\n");
 }

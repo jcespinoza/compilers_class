@@ -15,7 +15,7 @@ $(EXPR_LEXER_SRC): expr.l
 	flex -o $@ $^
 
 $(EXPR_PARSER_SRC): expr.y ast.h ast.cpp
-	bison --defines=tokens.h -o $@ $<
+	bison -rall --defines=tokens.h -o $@ $<
 
 run: $(TARGET)
 	./$(TARGET) input.txt
