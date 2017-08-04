@@ -13,8 +13,12 @@ print $2 hex
 print $1 hex
 print ($1 + 10) hex
 
+myVar = $0
 $0 = 0
 $1 = 0
 $2 = 0
+
+print myVar + 5
+print myOtherVar / 5
 
 #include "input2.txt"

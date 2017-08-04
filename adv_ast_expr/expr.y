@@ -24,7 +24,7 @@ void yyerror(const char *msg){
   Statement* statement_t;
   Expr* expr_t;
   int int_t;
-  char* charp_t;
+  char* string_t;
 }
 
 %expect 1
@@ -33,7 +33,7 @@ void yyerror(const char *msg){
 %type <statement_t> if_statement optional_else block_or_statement
 %type <expr_t> expr term factor add_expr
 %type<int_t> pr_format
-%token<charp_t> TK_IDENTIFIER
+%token<string_t> TK_IDENTIFIER
 
 %token OP_ASSIGN OP_EQUALS OP_NEQ
 %token OP_ADD OP_SUB OP_GREATER_THAN OP_LESS_THAN
@@ -68,7 +68,7 @@ statement: var_assignment { $$ = $1; }
     ;
 
 var_assignment: TK_VAR_SIGN OP_ASSIGN expr { $$ = new DollarAssignmentSt($1, $3); }
-    /*| TK_IDENTIFIER OP_ASSIGN expr { $$ = new }*/
+    | TK_IDENTIFIER OP_ASSIGN expr { $$ = new IdAssignmentSt($1, $3); }
     ;
 
 print: KW_PRINT expr pr_format { $$ = new PrintStatement($2, $3); }
@@ -109,6 +109,7 @@ term : term OP_MUL factor { $$ = new MultExpr($1, $3); }
     ;
 
 factor: TK_NUMBER { $$ = new NumExpr( $1 ); }
-    | TK_VAR_SIGN {$$ = new VarExpr($1); }
+    | TK_VAR_SIGN { $$ = new VarExpr($1); }
+    | TK_IDENTIFIER { $$ = new IdExpr($1); }
     | TK_LEFT_PAR expr TK_RIGHT_PAR { $$ = $2; }
     ;

@@ -7,6 +7,7 @@
 
 #include <list>
 #include "stdio.h"
+#include <string>
 
 #define DEF_OPERATOR_EXPR(name) \
   class name##Expr : public BinaryExpr{\
@@ -55,6 +56,15 @@ public:
   int index;
 };
 
+class IdExpr: public Expr{
+public:
+  IdExpr(char* varName){ this->varName.append( varName ); }
+
+  int eval();
+
+  string varName;
+};
+
 DEF_OPERATOR_EXPR(Equals);
 DEF_OPERATOR_EXPR(NotEquals);
 DEF_OPERATOR_EXPR(LeqThan);
@@ -92,12 +102,12 @@ class IdAssignmentSt: public AssignmentStatement{
 public:
   IdAssignmentSt(char* varName, Expr* expression): AssignmentStatement(expression){
     this->expression = expression;
-    this->varName = varName;
+    this->varName.append( varName );
   }
 
   void exec();
 
-  char* varName = 0;
+  string varName;
 };
 
 
