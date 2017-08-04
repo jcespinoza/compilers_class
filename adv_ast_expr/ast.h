@@ -69,29 +69,37 @@ public:
 
 class AssignmentStatement: public Statement{
 public:
-  AssignmentStatement(int index, Expr* expression){
+  AssignmentStatement(Expr* expression){
     this->expression = expression;
-    this->index = index;
   }
 
-  void exec();
-
   Expr* expression;
-  int index = 0;
 };
 
-class DollarAssignmentSt: public Statement{
+class DollarAssignmentSt: public AssignmentStatement{
 public:
-  DollarAssignmentSt(int index, Expr* expression){
+  DollarAssignmentSt(int index, Expr* expression): AssignmentStatement(expression){
     this->expression = expression;
     this->index = index;
   }
 
   void exec();
 
-  Expr* expression;
   int index = 0;
 };
+
+class IdAssignmentSt: public AssignmentStatement{
+public:
+  IdAssignmentSt(char* varName, Expr* expression): AssignmentStatement(expression){
+    this->expression = expression;
+    this->varName = varName;
+  }
+
+  void exec();
+
+  char* varName = 0;
+};
+
 
 class BlockStatement: public Statement{
 public:

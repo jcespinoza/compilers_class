@@ -33,7 +33,7 @@ int VarExpr::eval(){
   return variables[index];
 }
 
-void AssignmentStatement::exec(){
+void DollarAssignmentSt::exec(){
   variables[index] = expression->eval();
 }
 

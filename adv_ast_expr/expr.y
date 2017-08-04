@@ -67,7 +67,7 @@ statement: var_assignment { $$ = $1; }
     | if_statement { $$ = $1; }
     ;
 
-var_assignment: TK_VAR_SIGN OP_ASSIGN expr { $$ = new AssignmentStatement($1, $3); }
+var_assignment: TK_VAR_SIGN OP_ASSIGN expr { $$ = new DollarAssignmentSt($1, $3); }
     /*| TK_IDENTIFIER OP_ASSIGN expr { $$ = new }*/
     ;
 
