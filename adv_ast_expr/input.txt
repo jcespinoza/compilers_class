@@ -3,7 +3,12 @@ $2 = 15
 
 $1 = ($0 + $2) * 5
 
-print $0 bin
+if ($0 >= 8){
+  print $0 bin
+}else{
+  print $0 hex
+}
+
 print $2 hex
 print $1 hex
 print ($1 + 10) hex

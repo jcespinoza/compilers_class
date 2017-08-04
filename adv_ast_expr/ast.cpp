@@ -118,5 +118,11 @@ void PrintStatement::printBits(void const* const pointer ){
 }
 
 void IfStatement::exec(){
-  printf("Executing if statement;\n");
+  if(condition->eval()){
+    truePart->exec();
+  }else{
+    if(falsePart != NULL){
+      falsePart->exec();
+    }
+  }
 }

@@ -26,6 +26,8 @@ void yyerror(const char *msg){
   int int_t;
 }
 
+%expect 1
+
 %type <statement_t> statement var_assignment print statements
 %type <statement_t> if_statement optional_else block_or_statement
 %type <expr_t> expr term factor add_expr
