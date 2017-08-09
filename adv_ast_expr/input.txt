@@ -3,11 +3,16 @@ $2 = 15
 
 $1 = ($0 + $2) * 5
 
-if ($0 >= 8){
+if ($0 >= 8)
+
+{
+
+
+
   print $0 bin
-}else{
-  print $0 hex
 }
+
+else
 
 print $2 hex
 print $1 hex
@@ -15,7 +20,9 @@ print ($1 + 10) hex
 
 myVar = $0
 $0 = 0
-$1 = 0
+if(1 == 1)
+  $1 = 0
+  
 $2 = 0
 
 print myVar + 5
