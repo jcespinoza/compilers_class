@@ -40,7 +40,7 @@ int process_include(char end_symbol);
 
               return TK_FORMAT;
              }
-[_a-zA-Z][_a-zA-Z]* {
+[_a-zA-Z][_a-zA-Z0-9]* {
                 char* varName = (char*)malloc(strlen(yytext));
                 strcpy(varName, yytext);
 

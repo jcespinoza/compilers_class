@@ -17,7 +17,7 @@ void yyerror(const char *msg){
 }
 
 #define YYERROR_VERBOSE 1
-
+#define YYDEBUG 1
 %}
 
 %union {
@@ -27,7 +27,8 @@ void yyerror(const char *msg){
   char* string_t;
 }
 
-%expect 1
+%glr-parser
+/*%expect 1*/
 
 %type <statement_t> statement var_assignment print statements
 %type <statement_t> if_statement optional_else block_or_statement
@@ -78,15 +79,16 @@ pr_format:  TK_FORMAT { $$ = $1; }
     |  { $$ = DEC_FORMAT; }
     ;
 
-if_statement: KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR block_or_statement optional_else { $$ = new IfStatement($3, $5, $6); }
+if_statement: KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR eols block_or_statement optional_else %dprec 2 { $$ = new IfStatement($3, $6, $7); }
+    | KW_IF TK_LEFT_PAR expr TK_RIGHT_PAR eols block_or_statement %dprec 1 { $$ = new IfStatement($3, $6, NULL); }
     ;
 
 block_or_statement: TK_LEFT_BRACE opt_eols statements opt_eols TK_RIGHT_BRACE { $$ = $3;}
     | statement { $$ = $1; }
     ;
 
-optional_else: KW_ELSE block_or_statement { $$ = $2; }
-    | { $$ = NULL; }
+optional_else: eols KW_ELSE eols block_or_statement  { $$ = $4; }
+/*    | { $$ = NULL; }*/
     ;
 
 expr: expr OP_EQUALS add_expr { $$ = new EqualsExpr($1, $3); }

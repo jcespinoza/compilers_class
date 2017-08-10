@@ -49,7 +49,7 @@ void DollarAssignmentSt::exec(){
 
 void IdAssignmentSt::exec(){
   strVariables[varName] = expression->eval();
-  printf("Changing %s to %d\n", varName.c_str(), expression->eval());
+  //printf("Changing %s to %d\n", varName.c_str(), expression->eval());
 }
 
 void BlockStatement::exec(){

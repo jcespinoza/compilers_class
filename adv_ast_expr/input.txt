@@ -1,31 +1,45 @@
-$0 = 8
-$2 = 15
+/*$0 = 1
+$2 = 3*/
 
-$1 = ($0 + $2) * 5
+var5 = 5
+
+$0 = 1
+$7 = 20
+$1 = 0
+
+if($0 == 10)
+  if($7 == 20)
+    $1 = 1
+else
+  $1 = 2
+
+print ($1) dec
+
+/*
+$1 = ($0 + $2) * 2
 
 if ($0 >= 8)
 
 {
-
-
 
   print $0 bin
 }
 
 else
 
-print $2 hex
-print $1 hex
-print ($1 + 10) hex
+print $2
+print $1
+print ($1 + 10)
 
 myVar = $0
 $0 = 0
 if(1 == 1)
   $1 = 0
-  
+
 $2 = 0
 
 print myVar + 5
 print myOtherVar / 5
 
 #include "input2.txt"
+*/
