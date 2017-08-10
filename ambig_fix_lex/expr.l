@@ -3,10 +3,12 @@
 %x comment
 %x include
 %x includeDiamond
+%x eols
+%x block_comment_eols
 %{
 #include "defs.h"
 #include "lexer_code.cpp"
-
+void yyerror(const char* message);
 int process_include(char end_symbol);
 %}
 
@@ -17,7 +19,7 @@ int process_include(char end_symbol);
 ^"#"[ \t]*"include"[ \t]*\"  { BEGIN(include); }
 "$"[0-7]     { yylval.int_t = yytext[1] - '0'; return TK_VAR_SIGN; }
 "/*"         { BEGIN(comment); }
-"//".*\n     { return TK_EOL; }
+"//".*\n     { BEGIN(eols); }
 
 "!="         { return OP_NEQ; }
 "=="         { return OP_EQUALS; }
@@ -27,7 +29,7 @@ int process_include(char end_symbol);
 "<"          { return OP_LESS_THAN; }
 ">"          { return OP_GREATER_THAN; }
 "if"         { return KW_IF; }
-"else"       { return KW_ELSE; }
+"else"       { yyerror("Else keyword was not expected here."); return KW_ELSE; }
 "print"      { return KW_PRINT; }
 "dec"|"hex"|"bin" {
               if(strcmp(yytext, "hex") == 0 ){
@@ -56,9 +58,21 @@ int process_include(char end_symbol);
 "{"          { return TK_LEFT_BRACE; }
 "}"          { return TK_RIGHT_BRACE; }
 [0-9]+       { yylval.int_t =  atoi(yytext); return TK_NUMBER; }
-"\n"         { return TK_EOL; }
+"\n"         { BEGIN(eols); }
 <INITIAL><<EOF>>       { if(pop_file() != 0) yyterminate(); }
 .            { return TK_ERROR; }
+
+<eols>\n      { /*Nothing */ }
+<eols>"//"    { /*Nothing */  }
+<eols>[ \t]   { /* Nothing */ }
+<eols>"/*"    { BEGIN(block_comment_eols); }
+<eols>"else"  { BEGIN(INITIAL); return KW_ELSE; }
+<eols><<EOF>> { BEGIN(INITIAL); return TK_EOL; }
+<eols>.       { BEGIN(INITIAL); unput(yytext[0]); return TK_EOL; }
+
+<block_comment_eols>"*/" { BEGIN(eols); }
+<block_comment_eols>.|\n { /* NADA */ }
+<block_comment_eols><<EOLF>> { printf("Line %d: Unmatched block comment\n", yylineno); return 0; }
 
 <include>[^\"\n]+ {
                     process_include('"');

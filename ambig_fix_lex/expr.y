@@ -85,7 +85,7 @@ block_or_statement: TK_LEFT_BRACE opt_eols statements opt_eols TK_RIGHT_BRACE { 
     | statement { $$ = $1; }
     ;
 
-optional_else: eols KW_ELSE eols block_or_statement  { $$ = $4; }
+optional_else: KW_ELSE eols block_or_statement  { $$ = $3; }
     | { $$ = NULL; }
     ;
 
