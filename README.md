@@ -35,3 +35,5 @@ Usage: print <expr> [dec | hex | bin] 32 bit integers
   }
 }
 ```
+
+- Fix problem with mixed-syntax variable assginments
