@@ -36,4 +36,14 @@ Usage: print <expr> [dec | hex | bin] 32 bit integers
 }
 ```
 
-- Fix problem with mixed-syntax variable assginments
+- Fix problem with mixed-syntax variable assignnments
+
+
+## Week Four
+- Add support for if and else keywords
+- Enhance AST with If statement
+- Resolve the dangling else problem
+
+## Week Five
+- Add support for while loop statements
+- Modify the project to use Lemon instead of Bison
