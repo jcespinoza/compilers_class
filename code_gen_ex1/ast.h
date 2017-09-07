@@ -34,14 +34,14 @@ public:
     registers["$t7"] = 0;
     registers["$t8"] = 0;
     registers["$t9"] = 0;
-    registers["$s0"] = 0;
-    registers["$s1"] = 0;
-    registers["$s2"] = 0;
-    registers["$s3"] = 0;
-    registers["$s4"] = 0;
-    registers["$s5"] = 0;
-    registers["$s6"] = 0;
-    registers["$s7"] = 0;
+    // registers["$s0"] = 0;
+    // registers["$s1"] = 0;
+    // registers["$s2"] = 0;
+    // registers["$s3"] = 0;
+    // registers["$s4"] = 0;
+    // registers["$s5"] = 0;
+    // registers["$s6"] = 0;
+    // registers["$s7"] = 0;
   }
 
   map<string, bool> registers;
@@ -78,6 +78,7 @@ public:
     this->value = value;
   }
   SynthMIPS GenerateCode(Scope& scope);
+  void releaseRegisters();
   int value;
 };
 
@@ -87,6 +88,7 @@ public:
 
   string varName;
   SynthMIPS GenerateCode(Scope& scope);
+  void releaseRegisters();
 };
 
 class Statement{

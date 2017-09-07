@@ -24,33 +24,38 @@ SynthMIPS StatementList::GenerateCode(Scope& scope){
   SynthMIPS synth;
   for(; it != statements.end(); it++){
     SynthMIPS synth = (*it)->GenerateCode(scope);
-    cout << synth.Code;
+    cout << synth.Code << "\n";
   }
   return synth;
 }
 
 SynthMIPS NumExpr::GenerateCode(Scope& scope){
   stringstream stream;
-  stream << "addi " << scope.getFreeRegister() <<", " << "$zero, " <<  value << " \n";
+  string place = scope.getFreeRegister();
+  stream << "addi " << place <<", " << "$zero, " <<  value << " \n";
+
   return SynthMIPS{
-    "t0",
+    place,
     stream.str()
   };
 }
 
 SynthMIPS IdExpr::GenerateCode(Scope& scope){
   stringstream stream;
-  stream << "lw " << "$t0, " << varName << " \n";
+  string place = scope.getFreeRegister();
+  stream << "lw " << place <<", " << varName << " \n";
   return SynthMIPS{
-    "t0",
+    place,
     stream.str()
   };
 }
 
 SynthMIPS ExprStatement::GenerateCode(Scope& scope){
   SynthMIPS expSynth = expression->GenerateCode(scope);
+  scope.releaseRegister(expSynth.Place);
+
   return SynthMIPS{
-    "t0",
+    expSynth.Place,
     expSynth.Code
   };
 }
@@ -61,33 +66,84 @@ SynthMIPS AddExpr::GenerateCode(Scope& scope){
   SynthMIPS rightSynth = RightSide->GenerateCode(scope);
   stream << leftSynth.Code;
   stream << rightSynth.Code;
-  stream << "add " << "$t0" << ", " << "$t0, " <<  "$t1" << " \n";
+
+  string lPlace = leftSynth.Place;
+  string rPlace = rightSynth.Place;
+  scope.releaseRegister(lPlace);
+  scope.releaseRegister(rPlace);
+
+  string rTarget = scope.getFreeRegister();
+
+  stream << "add " << rTarget << ", " << lPlace << ", " <<  rPlace << " \n";
 
   return SynthMIPS{
-    "t0",
+    rTarget,
     stream.str()
   };
 }
 
 SynthMIPS SubExpr::GenerateCode(Scope& scope){
   stringstream stream;
-  stream << "sub " << "$t1" << ", " << "$t0, " <<  "$t1" << " \n";
+  SynthMIPS leftSynth = LeftSide->GenerateCode(scope);
+  SynthMIPS rightSynth = RightSide->GenerateCode(scope);
+  stream << leftSynth.Code;
+  stream << rightSynth.Code;
+
+  string lPlace = leftSynth.Place;
+  string rPlace = rightSynth.Place;
+  scope.releaseRegister(lPlace);
+  scope.releaseRegister(rPlace);
+
+  string rTarget = scope.getFreeRegister();
+
+  stream << "sub " << rTarget << ", " << lPlace << ", " <<  rPlace << " \n";
+
   return SynthMIPS{
-    "t0",
+    rTarget,
     stream.str()
   };
 }
 
 SynthMIPS MultExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  SynthMIPS leftSynth = LeftSide->GenerateCode(scope);
+  SynthMIPS rightSynth = RightSide->GenerateCode(scope);
+  stream << leftSynth.Code;
+  stream << rightSynth.Code;
+
+  string lPlace = leftSynth.Place;
+  string rPlace = rightSynth.Place;
+  scope.releaseRegister(lPlace);
+  scope.releaseRegister(rPlace);
+
+  stream << "mult " << lPlace << ", " <<  rPlace << " \n";
+  string rTarget = scope.getFreeRegister();
+  stream << "mflo " << rTarget << "\n";
+
   return SynthMIPS{
-    "t0",
-    "Here's an MultExpr\n"
+    rTarget,
+    stream.str()
   };
 }
 
 SynthMIPS DivExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  SynthMIPS leftSynth = LeftSide->GenerateCode(scope);
+  SynthMIPS rightSynth = RightSide->GenerateCode(scope);
+  stream << leftSynth.Code;
+  stream << rightSynth.Code;
+
+  string lPlace = leftSynth.Place;
+  string rPlace = rightSynth.Place;
+  scope.releaseRegister(lPlace);
+  scope.releaseRegister(rPlace);
+
+  stream << "div " << lPlace << ", " <<  rPlace << " \n";
+  string rTarget = scope.getFreeRegister();
+  stream << "mflo " << rTarget << "\n";
+
   return SynthMIPS{
-    "t0",
-    "Here's an DivExpr\n"
+    rTarget,
+    stream.str()
   };
 }
