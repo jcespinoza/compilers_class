@@ -75,7 +75,7 @@ term(TE) ::= term(T) OP_DIV factor(F) . { TE = new DivExpr(T, F); }
 term ::= term OP_MOD factor .
 term(T) ::= factor(F) . { T = F; }
 
-factor(F) ::= LIT_INTEGER(NUM) . { F = new NumExpr((int)(*(int*)NUM)); }
+factor(F) ::= LIT_INTEGER(NUM) . { F = new NumExpr(atoi((char*)NUM)); }
 factor(F) ::= TK_IDENTIFIER(id) . { F = new IdExpr((char*)id); }
 factor(F) ::= PNT_LEFT_PAREN expression(ex) PNT_RIGHT_PAREN . { F = ex; }
 factor ::= OP_SUB factor .
