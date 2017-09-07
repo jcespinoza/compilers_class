@@ -1,0 +1,14 @@
+# object compiled c files
+*.o
+
+# executable
+exgen
+tokens.h
+lemon
+lempar.c
+*.out
+*.output
+expr_*
+
+# Output by GCC, Lemon and bison
+#*.out
