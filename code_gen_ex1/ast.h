@@ -46,7 +46,9 @@ DEF_OPERATOR_EXPR(Div);
 
 class NumExpr : public Expr{
 public:
-  NumExpr(int value){ this->value = value; }
+  NumExpr(int value){
+    this->value = value;
+  }
   SynthMIPS GenerateCode(Scope& scope);
   int value;
 };

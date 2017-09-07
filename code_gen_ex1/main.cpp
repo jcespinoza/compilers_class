@@ -1,5 +1,8 @@
 #include <cstdlib>
 #include <cstdio>
+#include <iostream>
+#include <string.h>
+#include "defs.h"
 #include "tokens.h"
 
 void* EXParseAlloc(void* (*allocProc)(size_t));
@@ -15,7 +18,20 @@ int main(){
   // Do it!
   int lexCode;
   while( (lexCode = yylex()) != 0){
-    EXParse(shellParser, lexCode, yytext);
+    if(lexCode == TK_IDENTIFIER){
+      char* iChar = new char[strlen((char*)yytext)];
+      strcpy(iChar, (char*)yytext);
+
+      //token.char_t = iChar;
+      EXParse(shellParser, lexCode, iChar);
+    }else if(lexCode == LIT_INTEGER){
+      char* nChar = new char[strlen((char*)yytext)];
+      strcpy(nChar, (char*)yytext);
+      EXParse(shellParser, lexCode, yytext);
+    }else{
+      EXParse(shellParser, lexCode, yytext);
+    }
+//    EXParse(shellParser, lexCode, &token);
   }
 
   EXParse(shellParser, 0, NULL);

@@ -1,3 +1,4 @@
+#include <sstream>
 #include "ast.h"
 
 string Root::GenerateCode(Scope& scope){
@@ -9,43 +10,57 @@ SynthMIPS StatementList::GenerateCode(Scope& scope){
   SynthMIPS synth;
   for(; it != statements.end(); it++){
     SynthMIPS synth = (*it)->GenerateCode(scope);
-    cout << synth.Code << "\n";
+    cout << synth.Code;
   }
   return synth;
 }
 
 SynthMIPS NumExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  stream << "addi " << "$t0, " << "$zero, " <<  value << " \n";
   return SynthMIPS{
     "t0",
-    "Here is a number\n"
+    stream.str()
   };
 }
 
 SynthMIPS IdExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  stream << "lw " << "$t0, " << varName << " \n";
   return SynthMIPS{
     "t0",
-    "Here's an identifier\n"
+    stream.str()
   };
 }
 
 SynthMIPS ExprStatement::GenerateCode(Scope& scope){
+  SynthMIPS expSynth = expression->GenerateCode(scope);
   return SynthMIPS{
     "t0",
-    "Here's an Expr Statement\n"
+    expSynth.Code
   };
 }
 
 SynthMIPS AddExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  SynthMIPS leftSynth = LeftSide->GenerateCode(scope);
+  SynthMIPS rightSynth = RightSide->GenerateCode(scope);
+  stream << leftSynth.Code;
+  stream << rightSynth.Code;
+  stream << "add " << "$t0" << ", " << "$t0, " <<  "$t1" << " \n";
+
   return SynthMIPS{
     "t0",
-    "Here's an AddExpr\n"
+    stream.str()
   };
 }
 
 SynthMIPS SubExpr::GenerateCode(Scope& scope){
+  stringstream stream;
+  stream << "sub " << "$t1" << ", " << "$t0, " <<  "$t1" << " \n";
   return SynthMIPS{
     "t0",
-    "Here's an SubExpr\n"
+    stream.str()
   };
 }
 

@@ -4,7 +4,6 @@
 %{
 
 #include "tokens.h"
-
 %}
 
 %%

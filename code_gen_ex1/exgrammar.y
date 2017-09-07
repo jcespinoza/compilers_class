@@ -1,9 +1,11 @@
 %include {
   #include <cstdio>
   #include <string>
+  #include <string.h>
   #include <iostream>
   #include <assert.h>
   #include "ast.h"
+  #include "defs.h"
 
   using namespace std;
 
@@ -34,7 +36,8 @@
 %default_type {int}
 
 %type LIT_INTEGER { int }
-%type TK_IDENTIFIER {char*}
+%type TK_IDENTIFIER { char* }
+
 %type expression { Expr* }
 %type addi_expr { Expr* }
 %type term { Expr* }
@@ -53,7 +56,7 @@ input ::= statement_list(SL) .
       cout << code << "\n";
     }
 
-statement_list(SL) ::= statement_list(L) statement(S) . { ((StatementList*)S)->addStatement(S); SL = L; }
+statement_list(SL) ::= statement_list(L) statement(S) . { ((StatementList*)L)->addStatement(S); SL = L; }
 statement_list(SL) ::= statement(S) . { SL = new StatementList(); SL->addStatement(S); }
 
 //statement ::= assignment .
