@@ -16,9 +16,20 @@
 
 using namespace std;
 
+enum ExprKind {
+  Add,
+  Sub,
+  Mult,
+  Div,
+  Id,
+  Num
+};
+
 typedef struct SynthMIPS {
   string Place;
   string Code;
+  int Constant;
+  bool hasValue;
 } SynthMIPS;
 
 class Scope {
