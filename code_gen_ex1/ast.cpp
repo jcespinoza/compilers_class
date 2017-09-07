@@ -5,6 +5,20 @@ string Root::GenerateCode(Scope& scope){
   return statementList->GenerateCode(scope).Code;
 }
 
+void Scope::releaseRegister(string name){
+  registers[name] = 0;
+}
+
+string Scope::getFreeRegister(){
+  map<string, bool>::iterator it = registers.begin();
+  for(; it != registers.end(); it++){
+    if(it->second == false){
+      it->second = true;
+      return it->first;
+    }
+  }
+}
+
 SynthMIPS StatementList::GenerateCode(Scope& scope){
   list<Statement*>::iterator it = statements.begin();
   SynthMIPS synth;
@@ -17,7 +31,7 @@ SynthMIPS StatementList::GenerateCode(Scope& scope){
 
 SynthMIPS NumExpr::GenerateCode(Scope& scope){
   stringstream stream;
-  stream << "addi " << "$t0, " << "$zero, " <<  value << " \n";
+  stream << "addi " << scope.getFreeRegister() <<", " << "$zero, " <<  value << " \n";
   return SynthMIPS{
     "t0",
     stream.str()

@@ -11,6 +11,7 @@
 #include <list>
 #include "stdio.h"
 #include <iostream>
+#include <map>
 #include <string>
 
 using namespace std;
@@ -20,9 +21,36 @@ typedef struct SynthMIPS {
   string Code;
 } SynthMIPS;
 
-typedef struct Scope {
+class Scope {
+public:
+  Scope(){
+    registers["$t0"] = 0;
+    registers["$t1"] = 0;
+    registers["$t2"] = 0;
+    registers["$t3"] = 0;
+    registers["$t4"] = 0;
+    registers["$t5"] = 0;
+    registers["$t6"] = 0;
+    registers["$t7"] = 0;
+    registers["$t8"] = 0;
+    registers["$t9"] = 0;
+    registers["$s0"] = 0;
+    registers["$s1"] = 0;
+    registers["$s2"] = 0;
+    registers["$s3"] = 0;
+    registers["$s4"] = 0;
+    registers["$s5"] = 0;
+    registers["$s6"] = 0;
+    registers["$s7"] = 0;
+  }
 
-} Scope;
+  map<string, bool> registers;
+
+  void releaseRegister(string name);
+
+  string getFreeRegister();
+};
+
 
 class Expr{
 public:
