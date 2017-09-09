@@ -4,3 +4,4 @@ tinypython_parser.cpp
 tokens.h
 tinypython
 tinypython_parser.output
+*.o

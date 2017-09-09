@@ -37,6 +37,32 @@ enum ExprKind {
   CALL_EXPR
 };
 
+enum LocationType{
+
+};
+
+class Scope {
+public:
+  Scope(Scope* parentScope);
+
+  map<string, bool>* registers;
+  Scope* parentScope;
+
+  void releaseRegister(string name);
+
+  string getFreeRegister();
+
+private:
+  void initRegisters();
+};
+
+
+class SynthMIPS {
+public:
+  string location;
+  string code;
+};
+
 class Expr;
 typedef list<Expr*> ExprList;
 
@@ -192,10 +218,10 @@ public:
 
 class CallExpr: public Expr {
 public:
-    CallExpr(BuiltInFunct fnId) { 
-        this->fnId = fnId; 
+    CallExpr(BuiltInFunct fnId) {
+        this->fnId = fnId;
     }
-    CallExpr(BuiltInFunct fnId, Expr *arg0, Expr *arg1) { 
+    CallExpr(BuiltInFunct fnId, Expr *arg0, Expr *arg1) {
         this->fnId = fnId;
         this->arg0 = arg0;
         this->arg1 = arg1;
@@ -222,14 +248,16 @@ class Statement {
 public:
     virtual void execute() = 0;
     virtual StatementKind getKind() = 0;
+    virtual SynthMIPS generateCode(Scope& scope) = 0;
 };
 
 class BlockStatement: public Statement {
 public:
     BlockStatement() {}
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return BLOCK_STATEMENT; }
-	void add(Statement *st) { stList.push_back(st); }
+    void add(Statement *st) { stList.push_back(st); }
 
     list<Statement *> stList;
 };
@@ -242,6 +270,7 @@ public:
         this->expr = expr;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return ASSIGN_STATEMENT; }
 
     string id;
@@ -254,6 +283,7 @@ public:
         this->lexpr = lexpr;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return PRINT_STATEMENT; }
 
     ExprList lexpr;
@@ -267,6 +297,7 @@ public:
         this->falseBlock = falseBlock;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return IF_STATEMENT; }
 
     Expr *cond;
@@ -279,6 +310,7 @@ public:
     PassStatement() {
     }
     void execute() {} ;
+    SynthMIPS generateCode(Scope& scope){ SynthMIPS result; return result; }
     StatementKind getKind() { return PASS_STATEMENT; }
 };
 
@@ -289,6 +321,7 @@ public:
         this->block = block;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return WHILE_STATEMENT; }
 
     Expr *cond;
@@ -304,6 +337,7 @@ public:
         this->block = block;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return FOR_STATEMENT; }
 
     string id;
@@ -323,6 +357,7 @@ public:
         this->arg1 = arg1;
     }
     void execute();
+    SynthMIPS generateCode(Scope& scope);
     StatementKind getKind() { return CALL_STATEMENT; }
 
     BuiltInFunct fnId;
