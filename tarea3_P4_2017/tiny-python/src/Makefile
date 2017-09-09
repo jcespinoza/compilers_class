@@ -8,7 +8,7 @@ ${TARGET}: ast.o ${TARGET}_parser.o ${TARGET}_lexer.o main.o
 
 ast.o: ast.cpp ast.h
 	g++ $(CXXFLAGS) -c -o $@ $<
-	
+
 main.o: main.cpp ast.h
 	g++ $(CXXFLAGS) -c -o $@ $<
 
@@ -23,6 +23,9 @@ ${TARGET}_parser.cpp: ${TARGET}.y ast.h
 
 ${TARGET}_parse.o: ${TARGET}_parser.cpp
 	g++ $(CXXFLAGS) -c -o $@ $<
+
+run1: ${TARGET}
+	./${TARGET} ../samples/HelloWorld.py -s
 
 clean:
 	rm -f *.o

@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 			}else{
 				Scope scope(NULL);
 				SynthMIPS text = input->generateCode(scope);
-				printf("Printing some text here\n");
+				printf("This is the source:\n%s", text.code.c_str());
 			}
     }
 }

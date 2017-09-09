@@ -2,6 +2,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include "ast.h"
 
 using namespace std;
@@ -65,7 +66,17 @@ void BlockStatement::execute()
 
 SynthMIPS BlockStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  list<Statement *>::iterator it = stList.begin();
+  stringstream code;
 
+  while (it != stList.end()) {
+      Statement *st = *it;
+
+      code << st->generateCode(scope).code;
+
+      it++;
+  }
+  result.code = code.str();
   return result;
 }
 
