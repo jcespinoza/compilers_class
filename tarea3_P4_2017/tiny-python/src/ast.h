@@ -70,6 +70,12 @@ class Expr {
 public:
     virtual int evaluate() = 0;
     virtual int getKind() = 0;
+    SynthMIPS generateCode(Scope& scope){
+      SynthMIPS result;
+      result.location = "$t20";
+      result.code = "# Code to evaluate the expressio goes here\n";
+      return result;
+    }
     bool isA(int kind) { return (getKind() == kind); }
 };
 

@@ -106,16 +106,18 @@ SynthMIPS PrintStatement::generateCode(Scope& scope){
 
   while (it != lexpr.end()) {
     Expr *expr = *it;
-    string expCode = "# Code to evaluate the expressio goes here\n";
-    string expLocation = "$t20";
+
+    SynthMIPS expSynth = expr->generateCode(scope);
+    string expCode = expSynth.code;
+    string expLocation = expSynth.location;
 
     if (expr->isA(STRING_EXPR)) {
-      printf("%s", ((StringExpr*)expr)->str.c_str());
+      //((StringExpr*)expr)->str.c_str() //TODO: save to label in the .data section
       code << "move $a0, " << expLocation << "\n";
       code << "jal puts \n";
     } else {
-      int result = expr->evaluate();
-      printf("%d", result);
+      //SynthMIPS exprCode = expr->generateCode(scope);
+      //TODO: fix that
       code << "move $a0, " << expLocation << "\n";
       code << "jal putudecimal \n";
     }
@@ -136,7 +138,16 @@ void AssignStatement::execute()
 
 SynthMIPS AssignStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
 
+  SynthMIPS expSynth = expr->generateCode(scope);
+  string expCode = expSynth.code;
+  string expLocation = expSynth.location;
+  //scope.releaseRegister(expLocation); //TODO: remove this comment
+  code << expCode;
+  code << "sw " << expLocation <<", " << id << "\n";
+
+  result.code = code.str();
   return result;
 }
 
@@ -153,7 +164,9 @@ void IfStatement::execute()
 
 SynthMIPS IfStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
 
+  result.code = code.str();
   return result;
 }
 
@@ -170,7 +183,9 @@ void WhileStatement::execute()
 
 SynthMIPS WhileStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
 
+  result.code = code.str();
   return result;
 }
 
@@ -188,7 +203,9 @@ void ForStatement::execute()
 
 SynthMIPS ForStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
 
+  result.code = code.str();
   return result;
 }
 
@@ -207,7 +224,9 @@ void CallStatement::execute()
 
 SynthMIPS CallStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
 
+  result.code = code.str();
   return result;
 }
 
