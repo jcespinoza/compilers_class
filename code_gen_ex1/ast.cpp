@@ -29,6 +29,16 @@ SynthMIPS StatementList::GenerateCode(Scope& scope){
   return synth;
 }
 
+SynthMIPS PrintStatement::GenerateCode(Scope& scope){
+  SynthMIPS expSynth = expression->GenerateCode(scope);
+  scope.releaseRegister(expSynth.Place);
+
+  return SynthMIPS {
+    expSynth.Place,
+    expSynth.Code
+  };
+}
+
 SynthMIPS NumExpr::GenerateCode(Scope& scope){
   stringstream stream;
   string place = scope.getFreeRegister();
@@ -53,6 +63,19 @@ SynthMIPS IdExpr::GenerateCode(Scope& scope){
 SynthMIPS ExprStatement::GenerateCode(Scope& scope){
   SynthMIPS expSynth = expression->GenerateCode(scope);
   scope.releaseRegister(expSynth.Place);
+
+  return SynthMIPS{
+    expSynth.Place,
+    expSynth.Code
+  };
+}
+
+SynthMIPS IdAssignmentSt::GenerateCode(Scope& scope){
+  SynthMIPS expSynth = expression->GenerateCode(scope);
+  scope.releaseRegister(expSynth.Place);
+
+  stringstream stream;
+  stream << "lw " << expSynth.Place <<", " << varName << " \n";
 
   return SynthMIPS{
     expSynth.Place,

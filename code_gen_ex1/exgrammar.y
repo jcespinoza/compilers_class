@@ -43,6 +43,8 @@
 %type term { Expr* }
 %type factor { Expr* }
 %type statement { Statement*  }
+%type assignment { Statement*  }
+%type print_statement { Statement*  }
 %type statement_list { StatementList* }
 
 %start_symbol input
@@ -59,10 +61,13 @@ input ::= statement_list(SL) .
 statement_list(SL) ::= statement_list(L) statement(S) . { ((StatementList*)L)->addStatement(S); SL = L; }
 statement_list(SL) ::= statement(S) . { SL = new StatementList(); SL->addStatement(S); }
 
-//statement ::= assignment .
+statement ::= assignment .
+statement ::= print_statement .
 statement(S) ::= expression(E) PNT_END_OF_STATEMENT . { S = new ExprStatement(E); }
 
-//assignment ::= TK_IDENTIFIER OP_ASSIGN expression PNT_END_OF_STATEMENT .
+assignment(A) ::= TK_IDENTIFIER(Name) OP_ASSIGN expression(Exp) PNT_END_OF_STATEMENT . { A = new IdAssignmentSt((char*)Name, Exp); }
+
+print_statement(P) ::= TK_PRINT expression(Exp) . { P = new PrintStatement(Exp); }
 
 expression(E) ::= addi_expr(A) . { E = A; }
 

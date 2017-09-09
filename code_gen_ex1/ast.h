@@ -148,6 +148,16 @@ public:
   string varName;
 };
 
+class PrintStatement: public Statement {
+public:
+  PrintStatement(Expr* ex){
+    this->expression = ex;
+  }
+  SynthMIPS GenerateCode(Scope& scope);
+  Expr* expression;
+};
+
+
 class Root {
 public:
   Root(StatementList* statements){

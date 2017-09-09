@@ -18,6 +18,8 @@
 "*"                     { return OP_ASTERISK; }
 "/"                     { return OP_DIV; }
 "%"                     { return OP_MOD; }
+"print"                 { return TK_PRINT; }
+"="                     { return OP_ASSIGN; }
 [a-zA-Z_][a-zA-Z0-9_]*  { return TK_IDENTIFIER; }
 [0-9]+                  { return LIT_INTEGER; }
 .                       { fprintf(stderr, "Line %d: Invalid character\n", yylineno); return 0; }

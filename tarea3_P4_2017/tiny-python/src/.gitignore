@@ -1,0 +1,6 @@
+#generated files
+tinypython_lexer.cpp
+tinypython_parser.cpp
+tokens.h
+tinypython
+tinypython_parser.output
