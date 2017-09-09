@@ -101,7 +101,28 @@ void PrintStatement::execute()
 
 SynthMIPS PrintStatement::generateCode(Scope& scope){
   SynthMIPS result;
+  stringstream code;
+  list<Expr *>::iterator it = lexpr.begin();
 
+  while (it != lexpr.end()) {
+    Expr *expr = *it;
+    string expCode = "# Code to evaluate the expressio goes here\n";
+    string expLocation = "$t20";
+
+    if (expr->isA(STRING_EXPR)) {
+      printf("%s", ((StringExpr*)expr)->str.c_str());
+      code << "move $a0, " << expLocation << "\n";
+      code << "jal puts \n";
+    } else {
+      int result = expr->evaluate();
+      printf("%d", result);
+      code << "move $a0, " << expLocation << "\n";
+      code << "jal putudecimal \n";
+    }
+
+    it++;
+  }
+  result.code = code.str();
   return result;
 }
 
