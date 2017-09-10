@@ -72,7 +72,7 @@ SynthMIPS BlockStatement::generateCode(Scope& scope){
   while (it != stList.end()) {
       Statement *st = *it;
 
-      code << st->generateCode(scope).code;
+      code << st->generateCode(scope).code << "\n";
 
       it++;
   }
