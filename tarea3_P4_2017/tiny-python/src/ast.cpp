@@ -144,7 +144,8 @@ SynthMIPS AssignStatement::generateCode(Scope& scope){
   SynthMIPS expSynth = expr->generateCode(scope);
   string expCode = expSynth.code;
   string expLocation = expSynth.location;
-  //scope.releaseRegister(expLocation); //TODO: remove this comment
+  scope.releaseRegister(expLocation);
+  scope.
   code << expCode;
   code << "    sw " << expLocation <<", " << id << "\n";
 
@@ -487,7 +488,7 @@ SynthMIPS MultExpr::generateCode(Scope& scope){
   code << "    move $a1, " << rSynth.location << "\n";
   code << "    jal mult\n";
   string tReg = scope.getFreeRegister();
-  code << "    move "<< rReg << ", $v0\n";
+  code << "    move "<< tReg << ", $v0\n";
 
   result.location = tReg;
   result.code = code.str();
@@ -511,7 +512,7 @@ SynthMIPS DivExpr::generateCode(Scope& scope){
 	code << "    addi $a3, $sp, 4\n";
   code << "    jal divide\n";
   string tReg = scope.getFreeRegister();
-  code << "    move "<< rReg << ", $a2\n";
+  code << "    move "<< tReg << ", $a2\n";
 
   result.location = tReg;
   result.code = code.str();
@@ -535,7 +536,65 @@ SynthMIPS ModExpr::generateCode(Scope& scope){
 	code << "    addi $a3, $sp, 4\n";
   code << "    jal divide\n";
   string tReg = scope.getFreeRegister();
-  code << "    move "<< rReg << ", $a3\n";
+  code << "    move "<< tReg << ", $a3\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS ExponentExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    move $a0, " << lSynth.location << "\n";
+  code << "    move $a1, " << rSynth.location << "\n";
+  code << "    jal power\n";
+  string tReg = scope.getFreeRegister();
+  code << "    move "<< tReg << ", $v0\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS NumExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  string tReg = scope.getFreeRegister();
+  code << "    li " << tReg << ", " << value << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS IdExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  string tReg = scope.getFreeRegister();
+  code << "    lw " << tReg << ", " << id << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS StringExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  string tReg = scope.getFreeRegister();
+  code << "    la " << tReg << ", " << scope.registerString(str) << "\n";
 
   result.location = tReg;
   result.code = code.str();

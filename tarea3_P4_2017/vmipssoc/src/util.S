@@ -15,7 +15,7 @@ power:
     ori $t0, $zero, 1 # r = 1
 .power_while:
     seq $t1, $zero, $a1 # is q == 0 -> $t1
-    bne $t1, $zero, .power_end_while # if not false get out
+    beq $t1, $zero, .power_end_while # if not false get out
     nop # account for branch delay
 .power_while_if:
     sw $a0, 0($sp) # storing p
