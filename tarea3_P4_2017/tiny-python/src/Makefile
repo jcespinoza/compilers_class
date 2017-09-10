@@ -25,7 +25,7 @@ ${TARGET}_parse.o: ${TARGET}_parser.cpp
 	g++ $(CXXFLAGS) -c -o $@ $<
 
 run1: ${TARGET}
-	./${TARGET} ../samples/HelloWorld.py -s
+	./${TARGET} ../samples/HelloWorld.py -s ../../vmipssoc/src/main.S
 
 run2: ${TARGET}
 	./${TARGET} ../samples/ArithOperators.py -s

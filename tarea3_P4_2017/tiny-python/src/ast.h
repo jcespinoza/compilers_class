@@ -81,7 +81,7 @@ public:
     virtual int getKind() = 0;
     SynthMIPS generateCode(Scope& scope){
       SynthMIPS result;
-      result.location = "$t20";
+      result.location = "$t0";
       result.code = "    # Code to evaluate the expressio goes here\n";
       return result;
     }
