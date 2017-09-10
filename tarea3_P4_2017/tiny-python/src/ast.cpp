@@ -72,10 +72,11 @@ SynthMIPS BlockStatement::generateCode(Scope& scope){
   while (it != stList.end()) {
       Statement *st = *it;
 
-      code << st->generateCode(scope).code << "\n";
+      code << st->generateCode(scope).code;
 
       it++;
   }
+  code << "\n";
   result.code = code.str();
   return result;
 }
@@ -145,7 +146,7 @@ SynthMIPS AssignStatement::generateCode(Scope& scope){
   string expLocation = expSynth.location;
   //scope.releaseRegister(expLocation); //TODO: remove this comment
   code << expCode;
-  code << "   sw " << expLocation <<", " << id << "\n";
+  code << "    sw " << expLocation <<", " << id << "\n";
 
   result.code = code.str();
   return result;
@@ -169,7 +170,6 @@ SynthMIPS IfStatement::generateCode(Scope& scope){
   SynthMIPS expSynth = cond->generateCode(scope);
   string expCode = expSynth.code;
   string expLocation = expSynth.location;
-  SynthMIPS trueCode = trueBlock->generateCode(scope);
 
   string ifLabelName = scope.getLabelFor("if");
   string endIfLabelName = scope.getLabelFor("endif");
@@ -186,6 +186,7 @@ SynthMIPS IfStatement::generateCode(Scope& scope){
 
   code << "    beqz " << expLocation << ", " << jumpIfFalseLabel << "\n";
   code << "    nop\n";
+  SynthMIPS trueCode = trueBlock->generateCode(scope);
   code << trueCode.code;
 
   if(falseBlock != NULL){
@@ -213,6 +214,21 @@ SynthMIPS WhileStatement::generateCode(Scope& scope){
   SynthMIPS result;
   stringstream code;
 
+  SynthMIPS expSynth = cond->generateCode(scope);
+  string expCode = expSynth.code;
+  string expLocation = expSynth.location;
+
+  string whileLabelName = scope.getLabelFor("while");
+  string endWhileLabel = scope.getLabelFor("endwhile");
+  code << whileLabelName << ":\n";
+  code << expCode;
+  code << "    beqz " << expLocation << ", " << endWhileLabel << "\n";
+  SynthMIPS blockCode = block->generateCode(scope);
+
+  code << blockCode.code;
+  code << "j " << whileLabelName << "\n";
+  code << endWhileLabel << ": \n";
+
   result.code = code.str();
   return result;
 }
@@ -232,6 +248,35 @@ void ForStatement::execute()
 SynthMIPS ForStatement::generateCode(Scope& scope){
   SynthMIPS result;
   stringstream code;
+
+  SynthMIPS stExpSynth = startExpr->generateCode(scope);
+  string stExpCode = stExpSynth.code;
+  string stExpLocation = stExpSynth.location;
+
+  code << stExpCode;
+  code << "    sw " << stExpLocation << ", " << id << "\n";
+
+  SynthMIPS endExpSynth = endExpr->generateCode(scope);
+  string endExpCode = endExpSynth.code;
+  string endExpLocation = endExpSynth.location;
+
+  code << endExpCode;
+  string tempVarReg = scope.getFreeRegister();
+  code << "    move " << tempVarReg << ", " << endExpLocation << ", " << id << "\n";
+
+  string forLabelName = scope.getLabelFor("for");
+  string endForLabel = scope.getLabelFor("endfor");
+  code << forLabelName << ":\n";
+  string varValueReg = scope.getFreeRegister();
+  code << "    lw " << varValueReg << ", " << id << "\n";
+  code << "    sltu "  << varValueReg << ", " << tempVarReg << "\n";
+  code << "    beqz " << varValueReg << ", " << endForLabel << "\n";
+
+  SynthMIPS blockCode = block->generateCode(scope);
+  code << blockCode.code;
+
+  code << "j " << forLabelName << "\n";
+  code << endForLabel << ":\n";
 
   result.code = code.str();
   return result;
@@ -323,7 +368,7 @@ string Scope::getFreeRegister(){
 string Scope::getLabelFor(string kind){
   map<string, int> lCounters = (*labels);
   map<string, int>::iterator it = lCounters.begin();
-
+  kind.insert(0, ".");
   kind.append("_");
   kind.append( to_string(lCounters[kind]++) );
   return kind;
