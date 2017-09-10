@@ -4,8 +4,8 @@
 # ******************************************
 random.seed(time.clock())
 
-x = random.randint()
-y = random.randint()
+x = random.randint(0,5)
+y = random.randint(0,9)
 
 print ("X = ", x, " Y = ", y)
 
