@@ -79,12 +79,13 @@ class Expr {
 public:
     virtual int evaluate() = 0;
     virtual int getKind() = 0;
-    SynthMIPS generateCode(Scope& scope){
-      SynthMIPS result;
-      result.location = "$t0";
-      result.code = "    # Code to evaluate the expressio goes here\n";
-      return result;
-    }
+    virtual SynthMIPS generateCode(Scope& scope) = 0;
+    // {
+    //   SynthMIPS result;
+    //   result.location = "$t0";
+    //   result.code = "    # Code to evaluate the expressio goes here\n";
+    //   return result;
+    // }
     bool isA(int kind) { return (getKind() == kind); }
 };
 
@@ -102,7 +103,7 @@ public:
 class LTExpr: public BinaryExpr {
 public:
     LTExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() < expr2->evaluate(); }
     int getKind() { return LT_EXPR; }
 };
@@ -110,7 +111,7 @@ public:
 class GTExpr: public BinaryExpr {
 public:
     GTExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() > expr2->evaluate(); }
     int getKind() { return GT_EXPR; }
 };
@@ -118,7 +119,7 @@ public:
 class LTEExpr: public BinaryExpr {
 public:
     LTEExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() <= expr2->evaluate(); }
     int getKind() { return LTE_EXPR; }
 };
@@ -126,7 +127,7 @@ public:
 class GTEExpr: public BinaryExpr {
 public:
     GTEExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() >= expr2->evaluate(); }
     int getKind() { return GTE_EXPR; }
 };
@@ -134,7 +135,7 @@ public:
 class NEExpr: public BinaryExpr {
 public:
     NEExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() != expr2->evaluate(); }
     int getKind() { return NE_EXPR; }
 };
@@ -142,7 +143,7 @@ public:
 class EQExpr: public BinaryExpr {
 public:
     EQExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() == expr2->evaluate(); }
     int getKind() { return NE_EXPR; }
 };
@@ -150,7 +151,7 @@ public:
 class AddExpr: public BinaryExpr {
 public:
     AddExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() + expr2->evaluate(); }
     int getKind() { return ADD_EXPR; }
 };
@@ -158,7 +159,7 @@ public:
 class SubExpr: public BinaryExpr {
 public:
     SubExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() - expr2->evaluate(); }
     int getKind() { return SUB_EXPR; }
 };
@@ -166,7 +167,7 @@ public:
 class MultExpr: public BinaryExpr {
 public:
     MultExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() * expr2->evaluate(); }
     int getKind() { return MULT_EXPR; }
 };
@@ -174,7 +175,7 @@ public:
 class DivExpr: public BinaryExpr {
 public:
     DivExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() / expr2->evaluate(); }
     int getKind() { return DIV_EXPR; }
 };
@@ -182,7 +183,7 @@ public:
 class ModExpr: public BinaryExpr {
 public:
     ModExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expr1->evaluate() % expr2->evaluate(); }
     int getKind() { return EXPT_EXPR; }
 };
@@ -190,7 +191,7 @@ public:
 class ExponentExpr: public BinaryExpr {
 public:
     ExponentExpr(Expr *expr1, Expr *expr2): BinaryExpr(expr1, expr2) {}
-
+    SynthMIPS generateCode(Scope& scope);
     int evaluate() { return expt(expr1->evaluate(), expr2->evaluate()); }
     int getKind() { return MOD_EXPR; }
 };
@@ -200,7 +201,7 @@ public:
     NumExpr(int value) { this->value = value; }
     int evaluate() { return value; }
     int getKind() { return NUM_EXPR; }
-
+    SynthMIPS generateCode(Scope& scope);
     int value;
 };
 
@@ -209,7 +210,7 @@ public:
     IdExpr(string id) { this->id = id; }
     int evaluate() { return vars[id]; }
     int getKind() { return ID_EXPR; }
-
+    SynthMIPS generateCode(Scope& scope);
     string id;
 };
 
@@ -218,7 +219,7 @@ public:
     StringExpr(string str) { this->str = str; }
     int evaluate() { return 0; }
     int getKind() { return STRING_EXPR; }
-
+    SynthMIPS generateCode(Scope& scope);
     string str;
 };
 
@@ -227,7 +228,7 @@ public:
     InputExpr(string prompt) { this->prompt = prompt; }
     int evaluate();
     int getKind() { return INPUT_EXPR; }
-
+    SynthMIPS generateCode(Scope& scope);
     string prompt;
 };
 
@@ -243,7 +244,7 @@ public:
     }
     int evaluate();
     int getKind() { return CALL_EXPR; }
-
+    SynthMIPS generateCode(Scope& scope);
     BuiltInFunct fnId;
     Expr *arg0, *arg1;
 };
