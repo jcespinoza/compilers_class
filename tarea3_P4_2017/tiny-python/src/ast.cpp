@@ -120,7 +120,7 @@ SynthMIPS PrintStatement::generateCode(Scope& scope){
       //SynthMIPS exprCode = expr->generateCode(scope);
       //TODO: fix that
       code << "    move $a0, " << expLocation << "\n";
-      code << "    jal putudecimal \n";
+      code << "    jal put_udecimal \n";
     }
 
     it++;
@@ -380,4 +380,9 @@ string Scope::getLabelFor(string kind){
   kind.append("_");
   kind.append( to_string(lCounters[kind]++) );
   return kind;
+}
+
+
+string Scope::getGlobals(){
+  return "";
 }

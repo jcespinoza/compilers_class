@@ -1,6 +1,8 @@
 #include <cstdio>
 #include "ast.h"
 #include "tokens.h"
+#include <sstream>
+
 
 extern Statement *input;
 extern FILE *yyin;
@@ -41,8 +43,23 @@ int main(int argc, char *argv[])
 				input->execute();
 			}else{
 				Scope scope(NULL);
+
+				stringstream output;
+
 				SynthMIPS text = input->generateCode(scope);
-				printf("This is the source:\n%s", text.code.c_str());
+				output << ".global main\n\n";
+				output << ".data\n\n";
+				output << "  msg: .asciz \"Hello World\\n\"\n";
+				output << scope.getGlobals();
+				output << ".text\n";
+
+				output << "main:";
+				output << "    li $a0, BRIGHT_WHITE\n";
+		    output << "    li $a1, BLACK\n";
+		    output << "    jal set_color\n";
+		    output << "    jal clear_screen\n";
+				output << text.code;
+				printf("This is the source:\n%s", output.str().c_str());
 			}
     }
 }

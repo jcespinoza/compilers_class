@@ -41,15 +41,20 @@ enum LocationType{
 
 };
 
+enum GlobalVarType {
+  INTEGER,
+  STRING
+};
+
 class Scope {
 public:
   Scope(Scope* parentScope);
 
   void releaseRegister(string name);
-
   string getFreeRegister();
-
   string getLabelFor(string kind);
+  string getGlobals();
+  void addGlobal(string name, int varType);
 
 private:
   void initRegisters();
@@ -57,6 +62,7 @@ private:
   map<string, bool>* registers;
   map<string, int>* labels;
   Scope* parentScope;
+  list<string> globals;
 };
 
 
