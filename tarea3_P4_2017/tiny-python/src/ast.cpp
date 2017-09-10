@@ -320,6 +320,228 @@ SynthMIPS CallStatement::generateCallToRandSeed(Scope& scope){
   return result;
 }
 
+SynthMIPS LTExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    slt " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS GTExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    sgt " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS LTEExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    sle " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS GTEExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    sge " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS NEExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    sne " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS EQExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    seq " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS AddExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    add " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS SubExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  string tReg = scope.getFreeRegister();
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    sub " << tReg << ", " << lSynth.location << ", " << rSynth.location << "\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS MultExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    move $a0, " << lSynth.location << "\n";
+  code << "    move $a1, " << rSynth.location << "\n";
+  code << "    jal mult\n";
+  string tReg = scope.getFreeRegister();
+  code << "    move "<< rReg << ", $v0\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS DivExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    move $a0, " << lSynth.location << "\n";
+  code << "    move $a1, " << rSynth.location << "\n";
+  code << "    addi $a2, $sp, 0\n";
+	code << "    addi $a3, $sp, 4\n";
+  code << "    jal divide\n";
+  string tReg = scope.getFreeRegister();
+  code << "    move "<< rReg << ", $a2\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS ModExpr::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  SynthMIPS lSynth = expr1->generateCode(scope);
+  SynthMIPS rSynth = expr1->generateCode(scope);
+  scope.releaseRegister(lSynth.location);
+  scope.releaseRegister(rSynth.location);
+
+  code << lSynth.code;
+  code << rSynth.code;
+  code << "    move $a0, " << lSynth.location << "\n";
+  code << "    move $a1, " << rSynth.location << "\n";
+  code << "    addi $a2, $sp, 0\n";
+	code << "    addi $a3, $sp, 4\n";
+  code << "    jal divide\n";
+  string tReg = scope.getFreeRegister();
+  code << "    move "<< rReg << ", $a3\n";
+
+  result.location = tReg;
+  result.code = code.str();
+  return result;
+}
+
 Scope::Scope(Scope* parentScope){
   if(parentScope != NULL){
     this->parentScope = parentScope;

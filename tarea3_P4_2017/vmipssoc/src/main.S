@@ -11,8 +11,12 @@ main:
     li $a1, BLACK
     jal set_color
     jal clear_screen
-    la $a0, msg
-    #move $a0, msg
-    jal puts
+
+    li $a0, 2
+    li $a1, 2
+    jal power
+
+    move $a0, $v0
+    jal put_udecimal
 
     jr $ra

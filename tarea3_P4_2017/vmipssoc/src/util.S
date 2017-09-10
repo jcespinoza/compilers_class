@@ -2,11 +2,67 @@
 .global divide
 .global rand_seed
 .global rand
+.global power
 
 .data
 rnd_state: .word 0, 0, 0, 0
 
 .text
+
+## Plagiarism alert
+## Translated from ast.cpp (expt)
+power:
+    ori $t0, $zero, 1 # r = 1
+.power_while:
+    seq $t1, $zero, $a1 # is q == 0 -> $t1
+    bne $t1, $zero, .power_end_while # if not false get out
+    nop # account for branch delay
+.power_while_if:
+    sw $a0, 0($sp) # storing p
+    sw $a1, 4($sp) # storing q
+    sw $t0, 8($sp) # storing r
+    move $a0, $a1 # setting up dividend as q
+    li $a1, 2 # setting up divisor as 2
+    addi $a2, $sp, 12 # poiting target to quotient
+    addi  $a3, $sp, 16 # poiting target to remainder
+    jal divide # calling integer division
+    lw $a0, 0($sp) # acquiring p
+    lw $a1, 4($sp) # acquiring q
+    lw $t0, 8($sp) # acquiring r
+    lw $t1, 16($sp) # acquiring the remainder
+    addi $t2, $zero, 1 # setting up 1
+    seq $t1, $t1, $t2 # comparing modulo to 1
+    beq $t1, $zero, .power_while_endif
+    sw $a0, 0($sp) # storing p
+    sw $a1, 4($sp) # storing q
+    sw $t0, 8($sp) # storing r
+    move $a0, $t0 # setting up r as multiplicant
+    move $a1, $a0 # setting up p as factor
+    jal mult
+    lw $a0, 0($sp) # acquiring p
+    lw $a1, 4($sp) # acquiring q
+    lw $t0, 8($sp) # acquiring r
+    move $t0, $v0 # setting r = r times p
+    addi $t2, $zero, 1 # setting up 1
+    subu $a1, $a1, $t2 # substracting 1 from q
+
+.power_while_endif:
+    sw $a0, 0($sp) # storing p
+    sw $a1, 4($sp) # storing q
+    sw $t0, 8($sp) # storing r
+    move $a0, $a0 # setting up p as multiplicant
+    move $a1, $a0 # setting up p as factor
+    jal mult
+    lw $a0, 0($sp) # acquiring p
+    lw $a1, 4($sp) # acquiring q
+    lw $t0, 8($sp) # acquiring r
+    move $a0, $v0 # setting r = r times p
+    srl $a1, $a1, 1 # dividing q over 2
+    j .power_while
+
+.power_end_while:
+    move $v0, $t0
+    jr $ra
 
 divide:
     move $t1, $zero
