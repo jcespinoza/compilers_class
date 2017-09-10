@@ -371,6 +371,8 @@ public:
 
     BuiltInFunct fnId;
     Expr *arg0, *arg1;
+private:
+    SynthMIPS generateCallToRandSeed(Scope& scope);
 };
 
 #endif

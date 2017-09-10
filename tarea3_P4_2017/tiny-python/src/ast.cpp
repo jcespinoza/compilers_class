@@ -289,15 +289,6 @@ void CallStatement::execute()
             int arg = arg0->evaluate();
             srand(arg);
         }
-        break;
-        case FN_RANDINT: {
-
-        }
-        break;
-        case FN_TIMECLOCK: {
-
-        }
-        break;
         default: {
 
         }
@@ -305,6 +296,23 @@ void CallStatement::execute()
 }
 
 SynthMIPS CallStatement::generateCode(Scope& scope){
+  SynthMIPS result;
+  stringstream code;
+
+  switch (fnId) {
+      case FN_RANDSEED: {
+          return generateCallToRandSeed(scope);
+      }
+      default: {
+
+      }
+  }
+
+  result.code = code.str();
+  return result;
+}
+
+SynthMIPS CallStatement::generateCallToRandSeed(Scope& scope){
   SynthMIPS result;
   stringstream code;
 
