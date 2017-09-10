@@ -45,15 +45,18 @@ class Scope {
 public:
   Scope(Scope* parentScope);
 
-  map<string, bool>* registers;
-  Scope* parentScope;
-
   void releaseRegister(string name);
 
   string getFreeRegister();
 
+  string getLabelFor(string kind);
+
 private:
   void initRegisters();
+  void initLabels();
+  map<string, bool>* registers;
+  map<string, int>* labels;
+  Scope* parentScope;
 };
 
 
@@ -73,7 +76,7 @@ public:
     SynthMIPS generateCode(Scope& scope){
       SynthMIPS result;
       result.location = "$t20";
-      result.code = "# Code to evaluate the expressio goes here\n";
+      result.code = "    # Code to evaluate the expressio goes here\n";
       return result;
     }
     bool isA(int kind) { return (getKind() == kind); }

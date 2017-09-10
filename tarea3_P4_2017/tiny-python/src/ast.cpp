@@ -113,13 +113,13 @@ SynthMIPS PrintStatement::generateCode(Scope& scope){
 
     if (expr->isA(STRING_EXPR)) {
       //((StringExpr*)expr)->str.c_str() //TODO: save to label in the .data section
-      code << "move $a0, " << expLocation << "\n";
-      code << "jal puts \n";
+      code << "    move $a0, " << expLocation << "\n";
+      code << "    jal puts \n";
     } else {
       //SynthMIPS exprCode = expr->generateCode(scope);
       //TODO: fix that
-      code << "move $a0, " << expLocation << "\n";
-      code << "jal putudecimal \n";
+      code << "    move $a0, " << expLocation << "\n";
+      code << "    jal putudecimal \n";
     }
 
     it++;
@@ -145,7 +145,7 @@ SynthMIPS AssignStatement::generateCode(Scope& scope){
   string expLocation = expSynth.location;
   //scope.releaseRegister(expLocation); //TODO: remove this comment
   code << expCode;
-  code << "sw " << expLocation <<", " << id << "\n";
+  code << "   sw " << expLocation <<", " << id << "\n";
 
   result.code = code.str();
   return result;
@@ -165,6 +165,34 @@ void IfStatement::execute()
 SynthMIPS IfStatement::generateCode(Scope& scope){
   SynthMIPS result;
   stringstream code;
+
+  SynthMIPS expSynth = cond->generateCode(scope);
+  string expCode = expSynth.code;
+  string expLocation = expSynth.location;
+  SynthMIPS trueCode = trueBlock->generateCode(scope);
+
+  string ifLabelName = scope.getLabelFor("if");
+  string endIfLabelName = scope.getLabelFor("endif");
+  string jumpIfFalseLabel = endIfLabelName;
+  string elseLabelName = " ";
+
+  code << expCode;
+  code << ifLabelName << ":\n";
+
+  if(falseBlock != NULL){
+    elseLabelName = scope.getLabelFor("else");
+    jumpIfFalseLabel = elseLabelName;
+  }
+
+  code << "    beqz " << expLocation << ", " << jumpIfFalseLabel << "\n";
+  code << "    nop\n";
+  code << trueCode.code;
+
+  if(falseBlock != NULL){
+    code << elseLabelName << ":\n";
+    code << falseBlock->generateCode(scope).code;
+  }
+  code << endIfLabelName << ":\n";
 
   result.code = code.str();
   return result;
@@ -216,6 +244,15 @@ void CallStatement::execute()
             int arg = arg0->evaluate();
             srand(arg);
         }
+        break;
+        case FN_RANDINT: {
+
+        }
+        break;
+        case FN_TIMECLOCK: {
+
+        }
+        break;
         default: {
 
         }
@@ -236,6 +273,7 @@ Scope::Scope(Scope* parentScope){
     this->registers = parentScope->registers;
   }else{
     initRegisters();
+    initLabels();
   }
 }
 
@@ -255,6 +293,19 @@ void Scope::initRegisters(){
   regs["$t9"] = 0;
 }
 
+void Scope::initLabels(){
+  labels = new map<string, int>();
+
+  map<string, int> lab = *labels;
+  lab["if"] = 0;
+  lab["else"] = 0;
+  lab["endif"] = 0;
+  lab["for"] = 0;
+  lab["endfor"] = 0;
+  lab["while"] = 0;
+  lab["endwhile"] = 0;
+}
+
 void Scope::releaseRegister(string name){
   (*registers)[name] = 0;
 }
@@ -267,4 +318,13 @@ string Scope::getFreeRegister(){
       return it->first;
     }
   }
+}
+
+string Scope::getLabelFor(string kind){
+  map<string, int> lCounters = (*labels);
+  map<string, int>::iterator it = lCounters.begin();
+
+  kind.append("_");
+  kind.append( to_string(lCounters[kind]++) );
+  return kind;
 }
