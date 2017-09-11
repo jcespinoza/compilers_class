@@ -1,6 +1,0 @@
-# generated files
-screen.elf
-*.o
-*.mif
-*.bin mem_files
-screen.elf.s
